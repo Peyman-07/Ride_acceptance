@@ -74,7 +74,7 @@ class Simulator:
         self.inData = _inData.copy()  # copy of data structure for simulations (copy needed for multi-threading)
         self.vehicles = self.inData.vehicles  # input
         self.vehicle_fixed_positions = list() #f#
-        self.acceptance_attributes = pd.DataFrame()
+        self.acceptance_attributes = pd.DataFrame() #f#
         
         
         self.platforms = self.inData.platforms  # input
