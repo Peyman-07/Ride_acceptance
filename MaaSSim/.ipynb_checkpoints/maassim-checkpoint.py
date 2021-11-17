@@ -74,7 +74,7 @@ class Simulator:
         self.inData = _inData.copy()  # copy of data structure for simulations (copy needed for multi-threading)
         self.vehicles = self.inData.vehicles  # input
         self.vehicle_fixed_positions = list() #f#
-        self.acceptance_attributes = pd.DataFrame()
+        self.acceptance_attributes = pd.DataFrame() #f#
         
         
         self.platforms = self.inData.platforms  # input
@@ -237,6 +237,9 @@ class Simulator:
                     length = int(nx.shortest_path_length(self.inData.G, o, d, weight='length') / self.params.speeds.ride)
                     skim = self.skims.ride[o][d]
                     assert abs(skim - length) < 3
+#                     travel_time = int(nx.shortest_path_length(self.inData.G, o, d, weight='travel_time',method='dijkstra')) #f#
+#                     skim = self.skims.ride.T[o][d] #f#
+#                     assert abs(skim - travel_time) < 3 #f#
 
             else:
                 # unsuccesful trip
@@ -302,6 +305,7 @@ class Simulator:
         self.skims = DotMap()
         self.skims.dist = self.inData.skim.copy()
         self.skims.ride = self.skims.dist.divide(self.params.speeds.ride).astype(int).T  # <---- here we have travel time
+#         self.skims.ride = self.inData.ride_skim.copy() #f#
         self.skims.walk = self.skims.dist.divide(self.params.speeds.walk).astype(int).T  # <---- here we have travel time
 
     def timeout(self, n, variability=False):

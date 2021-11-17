@@ -94,7 +94,7 @@ def networkstats(inData):
     center_y = pd.DataFrame((inData.G.nodes(data='y')))[1].mean()
 
     nearest = get_nearest_node(inData.G, (center_y, center_x))
-    central_radius = 1500 #f#
+    central_radius = 1000 #f#
     central_nodes =list(inData.skim[nearest][inData.skim[nearest]<central_radius].keys()) #f#
     
     ret = DotMap({'center': nearest, 'radius': inData.skim[nearest].quantile(0.75),
@@ -111,6 +111,9 @@ def load_G(_inData, _params=None, stats=True, set_t=True):
     skim = pd.read_csv(_params.paths.skim, index_col='Unnamed: 0')
     skim.columns = [int(c) for c in skim.columns]
     _inData.skim = skim
+    ride_skim = pd.read_csv(_params.paths.ride_skim, index_col='Unnamed: 0') #f#
+    ride_skim.columns = [int(c) for c in ride_skim.columns] #f#
+    _inData.ride_skim = ride_skim #f#
     if stats:
         _inData.stats = networkstats(_inData)  # calculate center of network, radius and central node
     return _inData
