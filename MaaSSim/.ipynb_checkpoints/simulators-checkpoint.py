@@ -107,7 +107,7 @@ def simulate(config="data/config.json", inData=None, params=None, **kwargs):
         inData = load_G(inData, params, stats=True)  # download graph for the 'params.city' and calc the skim matrices
     if len(inData.passengers) == 0:  # only if no passengers in input
         inData = generate_demand(inData, params, avg_speed=True)
-    print('nonono')
+
     
     if params.vehicles_fixed == True:
         print('yesyesyes')
@@ -120,7 +120,7 @@ def simulate(config="data/config.json", inData=None, params=None, **kwargs):
     if len(inData.platforms) == 0:  # only if no platforms in input
         inData.platforms = initialize_df(inData.platforms)
         inData.platforms.loc[0] = empty_series(inData.platforms)
-        inData.platforms.fare = [2]
+        inData.platforms.fare = [2] #f#
 
     inData = prep_shared_rides(inData, params.shareability)  # prepare schedules
 

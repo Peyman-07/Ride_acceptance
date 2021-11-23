@@ -138,6 +138,20 @@ def save_G(inData, _params, path=None):
     # saves graph and skims to files
     ox.save_graphml(inData.G, filepath=_params.paths.G)
     inData.skim.to_csv(_params.paths.skim, chunksize=20000000)
+    
+    
+def calculate_dist(_inData, _params, source, target): #f#
+    try:
+        path = nx.shortest_path(_inData.G, source, target, 
+                                weight='travel_time', method='dijkstra')
+        dist = 0
+        for i in range(0,len(path)-1):
+            d = _inData.skim.T[path[i]][path[i+1]]
+            dist = dist + d
+    except:
+        dist = _params.dist_threshold
+    return dist
+    
 
 
 def generate_vehicles(_inData, nV):
@@ -206,8 +220,9 @@ def generate_demand(_inData, _params=None, avg_speed=False):
         distances.sample(_params.nP, weights='p_origin', replace=True).index)  # sample origin nodes from a distribution
     requests.destination = list(distances.sample(_params.nP, weights='p_destination',
                                                  replace=True).index)  # sample destination nodes from a distribution
-
-    requests['dist'] = requests.apply(lambda request: _inData.skim.loc[request.origin, request.destination], axis=1)
+    requests['dist'] = requests.apply(lambda row: calculate_dist(_inData, _params, row['origin'],row['destination']),
+                                      axis=1) #f#
+    #f#requests['dist'] = requests.apply(lambda request: _inData.skim.loc[request.origin, request.destination], axis=1)
     while len(requests[requests.dist >= _params.dist_threshold]) > 0:
         requests.origin = requests.apply(lambda request: (distances.sample(1, weights='p_origin').index[0]
                                                           if request.dist >= _params.dist_threshold else

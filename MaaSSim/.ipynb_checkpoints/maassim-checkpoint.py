@@ -72,6 +72,7 @@ class Simulator:
     def __init__(self, _inData, **kwargs):
         # input
         self.inData = _inData.copy()  # copy of data structure for simulations (copy needed for multi-threading)
+        #self.passengers = self.inData.passengers #f#
         self.vehicles = self.inData.vehicles  # input
         self.vehicle_fixed_positions = list() #f#
         self.acceptance_attributes = pd.DataFrame() #f#
@@ -305,7 +306,7 @@ class Simulator:
         self.skims = DotMap()
         self.skims.dist = self.inData.skim.copy()
         self.skims.ride = self.skims.dist.divide(self.params.speeds.ride).astype(int).T  # <---- here we have travel time
-#         self.skims.ride = self.inData.ride_skim.copy() #f#
+#         self.skims.ride = self.inData.ride_skim.T.copy() #f#
         self.skims.walk = self.skims.dist.divide(self.params.speeds.walk).astype(int).T  # <---- here we have travel time
 
     def timeout(self, n, variability=False):
