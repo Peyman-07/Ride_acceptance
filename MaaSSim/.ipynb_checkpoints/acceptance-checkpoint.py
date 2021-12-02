@@ -157,9 +157,14 @@ def ResultS(sim):
         
     for pax in sim.pax:
         ff = pd.DataFrame(sim.pax[pax].rides)
-        if 'ACCEPTS_OFFER' in list(ff['event']):
+        if 'MEETS_DRIVER_AT_PICKUP' in list(ff['event']):
             a = ff[ff['event']=='REQUESTS_RIDE']['t'].values[0]
-            b = ff.iloc[ff[ff['event']=='ACCEPTS_OFFER'].index-1]['t'].values[0]
+            b = ff.iloc[ff[ff['event']=='MEETS_DRIVER_AT_PICKUP'].index]['t'].values[0]
+            passenger_waiting_t = b-a
+            veh_id = ff['veh_id'].dropna().values[0]
+        elif 'ACCEPTS_OFFER' in list(ff['event']):
+            a = ff[ff['event']=='REQUESTS_RIDE']['t'].values[0]
+            b = ff.iloc[ff[ff['event']=='ACCEPTS_OFFER'].index]['t'].values[0]
             passenger_waiting_t = b-a
             veh_id = ff['veh_id'].dropna().values[0]
         else:
@@ -167,7 +172,7 @@ def ResultS(sim):
             b = ff[ff['event']=='LOSES_PATIENCE']['t'].values[0]
             passenger_waiting_t = b-a
             #passenger_waiting_t = 'no hail'
-            veh_id = 'null'
+            veh_id = 0 #'null'
 
         dec = declines[declines['pax_id']==pax]['declined'].value_counts().get('True',0)
             

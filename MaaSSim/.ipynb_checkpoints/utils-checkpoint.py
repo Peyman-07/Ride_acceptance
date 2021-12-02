@@ -94,7 +94,7 @@ def networkstats(inData):
     center_y = pd.DataFrame((inData.G.nodes(data='y')))[1].mean()
 
     nearest = get_nearest_node(inData.G, (center_y, center_x))
-    central_radius = 1000 #f#
+    central_radius = 1500 #f#
     central_nodes =list(inData.skim[nearest][inData.skim[nearest]<central_radius].keys()) #f#
     
     ret = DotMap({'center': nearest, 'radius': inData.skim[nearest].quantile(0.75),
@@ -220,9 +220,8 @@ def generate_demand(_inData, _params=None, avg_speed=False):
         distances.sample(_params.nP, weights='p_origin', replace=True).index)  # sample origin nodes from a distribution
     requests.destination = list(distances.sample(_params.nP, weights='p_destination',
                                                  replace=True).index)  # sample destination nodes from a distribution
-    requests['dist'] = requests.apply(lambda row: calculate_dist(_inData, _params, row['origin'],row['destination']),
-                                      axis=1) #f#
-    #f#requests['dist'] = requests.apply(lambda request: _inData.skim.loc[request.origin, request.destination], axis=1)
+    #f#requests['dist'] = requests.apply(lambda row: calculate_dist(_inData, _params, row['origin'],row['destination']), axis=1) #f#
+    requests['dist'] = requests.apply(lambda request: _inData.skim.loc[request.origin, request.destination], axis=1)
     while len(requests[requests.dist >= _params.dist_threshold]) > 0:
         requests.origin = requests.apply(lambda request: (distances.sample(1, weights='p_origin').index[0]
                                                           if request.dist >= _params.dist_threshold else

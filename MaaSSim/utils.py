@@ -94,7 +94,7 @@ def networkstats(inData):
     center_y = pd.DataFrame((inData.G.nodes(data='y')))[1].mean()
 
     nearest = get_nearest_node(inData.G, (center_y, center_x))
-    central_radius = 1000 #f#
+    central_radius = 1500 #f#
     central_nodes =list(inData.skim[nearest][inData.skim[nearest]<central_radius].keys()) #f#
     
     ret = DotMap({'center': nearest, 'radius': inData.skim[nearest].quantile(0.75),
